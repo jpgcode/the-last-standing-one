@@ -1,13 +1,4 @@
-var game = new Phaser.Game(1024, 768, Phaser.AUTO, 'gameDiv');
+var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'gameDiv');
 
-//global variables go below
-game.global = {
-    mute: false,
-    score: 0,
-    music: false
-};
-
-// game.state.add('boot', bootState);
-// game.state.add('load', loadState);
-// game.state.add('play', playState);
-// game.state.start('boot');
+game.state.add('IngameState', IngameState);
+game.state.start('IngameState');
