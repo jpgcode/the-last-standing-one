@@ -12,6 +12,7 @@ IngameState.prototype = {
         this.game.add.sprite(0, 0, 'starsBg');
         this.lava = this.game.add.tileSprite(0, 530, this.game.stage.game.width, 292, 'lava');
         this.createPlatforms();
+        this.animatePlatforms();
     },
 
     createPlatforms: function(){
@@ -31,6 +32,9 @@ IngameState.prototype = {
             var platform = this.platforms.create(startingCords[i].left, startingCords[i].top, 'rockPlatform');
         }
 
+    },
+
+    animatePlatforms: function(){
         this.platforms.forEach(function(platform){
 
             var goDown = function(){
@@ -45,9 +49,6 @@ IngameState.prototype = {
 
             goDown();
         });
-
-        console.log(this.platforms);
-
     },
     
     update: function() {
