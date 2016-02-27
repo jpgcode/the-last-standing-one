@@ -19,39 +19,34 @@ IngameState.prototype = {
         this.platforms = this.game.add.group();
         this.platforms.enableBody = true;
 
+        var startingCords = {
+            0: { top: 430, left: -30 }, 
+            1: { top: 380, left: 235 }, 
+            2: { top: 340, left: 520 },
+            3: { top: 390, left: 800 }, 
+            4: { top: 380, left: 1100 }
+        }
+
         for (var i = 0; i < 5; i++) {
+            var platform = this.platforms.create(startingCords[i].left, startingCords[i].top, 'rockPlatform');
+        }
 
-            var top, left;
+        this.platforms.forEach(function(platform){
 
-            switch(i){
-                case 0: 
-                    top = 430;
-                    left = -30;
-                    break;
-                case 1:
-                    top = 380;
-                    left = 235;
-                    break;
-                case 2:
-                    top = 340;
-                    left = 520;
-                    break;
-                case 3:
-                    top = 390;
-                    left = 800;
-                    break;
-                case 4:
-                    top = 380;
-                    left = 1100;
-                    break;
+            var goDown = function(){
+                var tween = this.game.add.tween(platform).to({ y: platform.position.y + 100 }, 2000, Phaser.Easing.Quadratic.InOut, true, 0);
+                tween.onComplete.add(goUp, this);
             }
 
-            var platform = this.platforms.create(left, top, 'rockPlatform');
-            var tween = this.game.add.tween(platform).to({ y: platform.position.y + 50 }, 1000, 'Linear', true, 0);
-            tween.onComplete.add(function(){
-                this.game.add.tween(platform).to({ y: platform.position.y - 50 }, 1000, 'Linear', true, 0);
-            }, this);
-        }
+            var goUp = function(){
+                var tween2 = this.game.add.tween(platform).to({ y: platform.position.y - 100 }, 2000, Phaser.Easing.Quadratic.InOut, true, 0);
+                tween2.onComplete.add(goDown, this); 
+            }
+
+            goDown();
+        });
+
+        console.log(this.platforms);
 
     },
     
