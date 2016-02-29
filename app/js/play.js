@@ -73,26 +73,18 @@ IngameState.prototype = {
 
         var platforms = this.platforms;  
         
-        this.platforms.forEach(function(callback){
+        var goDown = function(){
+            var tween = this.game.add.tween(platforms).to({ y: platforms.position.y + 100 }, 3000, Phaser.Easing.Quadratic.InOut, true, 0);
+            tween.onComplete.add(goUp, this);
+        }
 
-            var goDown = function(){
-                var tween = this.game.add.tween(platforms).to({ y: platforms.position.y + 100 }, 3000, Phaser.Easing.Quadratic.InOut, true, 0);
-                tween.onComplete.add(goUp, this);
-            }
-
-            var goUp = function(){
-                var tween2 = this.game.add.tween(platforms).to({ y: platforms.position.y - 100 }, 3000, Phaser.Easing.Quadratic.InOut, true, 0);
-                tween2.onComplete.add(goDown, this); 
-            }
-
-            
-            //var timer = game.time.events.add(Phaser.Timer.SECOND * index+1, goDown, this);
-
-        });
+        var goUp = function(){
+            var tween2 = this.game.add.tween(platforms).to({ y: platforms.position.y - 100 }, 3000, Phaser.Easing.Quadratic.InOut, true, 0);
+            tween2.onComplete.add(goDown, this); 
+        }
 
         
-        
-        
+        goDown();
         
     },
     
