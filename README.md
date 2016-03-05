@@ -1,4 +1,4 @@
-## Phaser game
+## The Last Standing One
 
 An experiment with Phaser!
 

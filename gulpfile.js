@@ -1,25 +1,17 @@
-var gulp = require('gulp');
-var watch = require('gulp-watch');
-var $ = require('gulp-load-plugins')();
-var bs = require('browser-sync').create();
+'use strict';
 
-gulp.task('notify:server', function(){
-  return gulp.src('gulpfile.js')
-      .pipe($.notify('Server ready!'));
-});
+// Module to require whole directories
+const gulp       = require('gulp');
+const requireDir = require('require-dir');
 
-gulp.task('reloadBrowsers',function(){
-  return bs.reload();
-});
 
-gulp.task('default', function(){
+// Pulling in all tasks from the tasks folder
+requireDir('./gulp/tasks', { recurse: true });
 
-	bs.init({
-      notify: false,
-      port: 9000,
-      server: { baseDir: ['app'] }
-  });
 
-	gulp.watch(['app/*.html', 'app/**/*.js'], ['reloadBrowsers']);
 
-});
+
+
+
+
+

@@ -1,15 +1,34 @@
 {
-  "name": "Game",
-  "app": "app",
-  "version": "0.0.1",
-  "private": true,
-  "engines": {
-    "node": ">=4.1.1"
+  "name": "the-last-standing-one",
+  "version": "1.0.0",
+  "description": "Phaser game",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "gulp",
+    "production": "gulp --production"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jpgcode/the-last-standing-one"
+  },
+  "author": "Jose Pablo Granados",
+  "license": "MIT",
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-watch": "^4.3.5",
-    "browser-sync": "^2.11.1",
-    "gulp-load-plugins": "^1.2.0"
+    "babelify": "^6.1.3",
+    "browser-sync": "^2.8.0",
+    "browserify": "^11.0.0",
+    "del": "^1.2.0",
+    "exorcist": "^0.4.0",
+    "gulp": "^3.9.0",
+    "gulp-buffer": "0.0.2",
+    "gulp-if": "^1.2.5",
+    "gulp-uglify": "^1.2.0",
+    "gulp-util": "^3.0.7",
+    "require-dir": "^0.3.0",
+    "vinyl-source-stream": "^1.1.0",
+    "yargs": "^3.16.1"
+  },
+  "dependencies": {
+    "phaser": "^2.4.1"
   }
 }
