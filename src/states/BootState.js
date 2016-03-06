@@ -1,3 +1,5 @@
+'use strict';
+
 class BootState extends Phaser.State{
 	preload(){
 		this.game.load.image('progressBar', 'images/progress_bar.png');   

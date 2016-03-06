@@ -1,6 +1,8 @@
+'use strict';
+
 class PreloadState extends Phaser.State{
 
-    preload(){
+    preload() {
 
         this.progress = this.game.add.text(this.game.world.centerX, this.game.world.centerY - 30, '0%', { fill: 'white' });
         this.progress.anchor.setTo(0.5, 0.5);
@@ -18,26 +20,30 @@ class PreloadState extends Phaser.State{
         this.game.load.onLoadComplete.add(this.loadComplete, this);
         
         // Load all assets
+        this.game.load.image('introBg', 'images/introBg.png');
+        this.game.load.image('playBtn', 'images/playBtn.png');
         this.game.load.image('starsBg', 'images/game_bg_universe.jpg');
         this.game.load.image('lava', 'images/lava_bg.png');
         this.game.load.image('rockPlatform', 'images/rock_platform.png');
-        this.game.load.spritesheet('playerIdle','images/character1/characterMain.png', 128, 107, 38);
         this.game.load.image('playerJump', 'images/character1/jump.png');
-        this.game.load.audio('ambientMusic', 'sounds/music.wav');
+
         this.game.load.audio('jump', 'sounds/jump.wav');
+        this.game.load.audio('ambientMusic', 'sounds/music.wav');
+
+        this.game.load.spritesheet('playerIdle','images/character1/characterMain.png', 128, 107, 38);
 
     }
     
-    fileComplete(progress){
+    fileComplete(progress) {
         this.progress.text = progress + '%';
     }
 
-    loadStart(){
+    loadStart() {
 
     }
 
-    loadComplete(){
-        this.game.state.start('GameState');
+    loadComplete() {
+        this.game.state.start('IntroState');
     }
 
 }   

@@ -1,28 +1,36 @@
+'use strict';
+
 import RockPlatformsGroup from '../objects/RockPlatformGroup';
 import Player from '../objects/Player';
 
 class GameState extends Phaser.State {
 
 	create() {
-		this.cursors = this.game.input.keyboard.createCursorKeys();
+
+        //Globals
+		this.cursors       = this.game.input.keyboard.createCursorKeys();
+        this.music         = this.game.add.audio('ambientMusic');
+        this.jumpSound     = this.game.add.audio('jump');
+        this.starsBG       = this.game.add.sprite(0, 0, 'starsBg');
+        this.lava          = this.game.add.tileSprite(0, 530, this.game.stage.game.width, 292, 'lava');
+        this.rockPlatforms = new RockPlatformsGroup(this.game, 5);
+        this.player        = new Player(this.game);
+
+        //Start game physics
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
-		this.center = { x: this.game.world.centerX, y: this.game.world.centerY }; 			
-		this.music = this.game.add.audio('ambientMusic');
-		this.jumpSound = this.game.add.audio('jump');
+		
+		//Methods calls
 		this.playMusic();
-		this.game.add.sprite(0, 0, 'starsBg');
-		this.lava = this.game.add.tileSprite(0, 530, this.game.stage.game.width, 292, 'lava');
-		this.rockPlatforms = new RockPlatformsGroup(this.game, 5);
 		this.animatePlatforms();
-		this.player = new Player(this.game);
+		
   
 	}
 
-	playMusic(){
+	playMusic() {
 		this.music.play();
 	}
 
-	animatePlatforms(){  
+	animatePlatforms() {
         const that = this;
 
         const goDown = () => {
@@ -39,7 +47,7 @@ class GameState extends Phaser.State {
         goDown();
 	}
 
-	update(){
+	update() {
 
 		this.lava.tilePosition.x += 0.6;
 		this.game.physics.arcade.collide(this.player, this.rockPlatforms);

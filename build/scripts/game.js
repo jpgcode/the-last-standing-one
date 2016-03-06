@@ -9,10 +9,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _statesGameState = require('./states/GameState');
-
-var _statesGameState2 = _interopRequireDefault(_statesGameState);
-
 var _statesBootState = require('./states/BootState');
 
 var _statesBootState2 = _interopRequireDefault(_statesBootState);
@@ -20,6 +16,14 @@ var _statesBootState2 = _interopRequireDefault(_statesBootState);
 var _statesPreloadState = require('./states/PreloadState');
 
 var _statesPreloadState2 = _interopRequireDefault(_statesPreloadState);
+
+var _statesIntroState = require('./states/IntroState');
+
+var _statesIntroState2 = _interopRequireDefault(_statesIntroState);
+
+var _statesGameState = require('./states/GameState');
+
+var _statesGameState2 = _interopRequireDefault(_statesGameState);
 
 var Game = (function (_Phaser$Game) {
 	_inherits(Game, _Phaser$Game);
@@ -29,8 +33,9 @@ var Game = (function (_Phaser$Game) {
 
 		_get(Object.getPrototypeOf(Game.prototype), 'constructor', this).call(this, 1280, 720, Phaser.AUTO, 'content', null);
 		this.state.add('BootState', _statesBootState2['default'], false);
-		this.state.add('GameState', _statesGameState2['default'], false);
+		this.state.add('IntroState', _statesIntroState2['default'], false);
 		this.state.add('PreloadState', _statesPreloadState2['default'], false);
+		this.state.add('GameState', _statesGameState2['default'], false);
 		this.state.start('BootState');
 	}
 
@@ -39,7 +44,7 @@ var Game = (function (_Phaser$Game) {
 
 new Game();
 
-},{"./states/BootState":4,"./states/GameState":5,"./states/PreloadState":6}],2:[function(require,module,exports){
+},{"./states/BootState":4,"./states/GameState":5,"./states/IntroState":6,"./states/PreloadState":7}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -219,17 +224,22 @@ var GameState = (function (_Phaser$State) {
     _createClass(GameState, [{
         key: 'create',
         value: function create() {
+
+            //Globals
             this.cursors = this.game.input.keyboard.createCursorKeys();
-            this.game.physics.startSystem(Phaser.Physics.ARCADE);
-            this.center = { x: this.game.world.centerX, y: this.game.world.centerY };
             this.music = this.game.add.audio('ambientMusic');
             this.jumpSound = this.game.add.audio('jump');
-            this.playMusic();
-            this.game.add.sprite(0, 0, 'starsBg');
+            this.starsBG = this.game.add.sprite(0, 0, 'starsBg');
             this.lava = this.game.add.tileSprite(0, 530, this.game.stage.game.width, 292, 'lava');
             this.rockPlatforms = new _objectsRockPlatformGroup2['default'](this.game, 5);
-            this.animatePlatforms();
             this.player = new _objectsPlayer2['default'](this.game);
+
+            //Start game physics
+            this.game.physics.startSystem(Phaser.Physics.ARCADE);
+
+            //Methods calls
+            this.playMusic();
+            this.animatePlatforms();
         }
     }, {
         key: 'playMusic',
@@ -309,6 +319,69 @@ module.exports = exports['default'];
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var IntroState = (function (_Phaser$State) {
+	_inherits(IntroState, _Phaser$State);
+
+	function IntroState() {
+		_classCallCheck(this, IntroState);
+
+		_get(Object.getPrototypeOf(IntroState.prototype), 'constructor', this).apply(this, arguments);
+	}
+
+	_createClass(IntroState, [{
+		key: 'create',
+		value: function create() {
+
+			this.starsBG = this.game.add.sprite(0, 0, 'starsBg');
+			this.lava = this.game.add.tileSprite(0, 530, this.game.stage.game.width, 292, 'lava');
+			this.introBg = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'introBg');
+			this.playBtn = this.game.add.button(this.game.world.centerX, this.game.world.centerY + 190, 'playBtn', this.test);
+
+			this.introText = this.game.add.text(this.game.world.centerX, this.game.world.centerY, 'Fight for honor against fiery opponents', { font: 'Helvetica', fontSize: '20px', fill: '#fff' });
+
+			this.introText2 = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 30, 'Get power gems and objects to improve your skills', { font: 'Helvetica', fontSize: '20px', fill: '#fff' });
+
+			this.introText3 = this.game.add.text(this.game.world.centerX, this.game.world.centerY + 60, 'The last player standing will reach the glory!', { font: 'Helvetica', fontSize: '20px', fill: '#fff' });
+
+			var anchorElements = [this.introBg, this.introText, this.introText2, this.introText3, this.playBtn];
+
+			anchorElements.forEach(function (el) {
+				el.anchor.setTo(0.5, 0.5);
+			});
+		}
+	}, {
+		key: 'update',
+		value: function update() {
+			this.lava.tilePosition.x += 0.6;
+		}
+	}, {
+		key: 'test',
+		value: function test() {
+			this.game.state.start('GameState');
+		}
+	}]);
+
+	return IntroState;
+})(Phaser.State);
+
+exports['default'] = IntroState;
+module.exports = exports['default'];
+
+},{}],7:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
     value: true
 });
 
@@ -348,13 +421,17 @@ var PreloadState = (function (_Phaser$State) {
             this.game.load.onLoadComplete.add(this.loadComplete, this);
 
             // Load all assets
+            this.game.load.image('introBg', 'images/introBg.png');
+            this.game.load.image('playBtn', 'images/playBtn.png');
             this.game.load.image('starsBg', 'images/game_bg_universe.jpg');
             this.game.load.image('lava', 'images/lava_bg.png');
             this.game.load.image('rockPlatform', 'images/rock_platform.png');
-            this.game.load.spritesheet('playerIdle', 'images/character1/characterMain.png', 128, 107, 38);
             this.game.load.image('playerJump', 'images/character1/jump.png');
-            this.game.load.audio('ambientMusic', 'sounds/music.wav');
+
             this.game.load.audio('jump', 'sounds/jump.wav');
+            this.game.load.audio('ambientMusic', 'sounds/music.wav');
+
+            this.game.load.spritesheet('playerIdle', 'images/character1/characterMain.png', 128, 107, 38);
         }
     }, {
         key: 'fileComplete',
@@ -367,7 +444,7 @@ var PreloadState = (function (_Phaser$State) {
     }, {
         key: 'loadComplete',
         value: function loadComplete() {
-            this.game.state.start('GameState');
+            this.game.state.start('IntroState');
         }
     }]);
 
