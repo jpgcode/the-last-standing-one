@@ -9,6 +9,7 @@ class IntroState extends Phaser.State{
 		this.introBg = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'introBg');
 		this.playBtn = this.game.add.button(this.game.world.centerX, this.game.world.centerY + 190, 'playBtn', this.test);
 
+
 		this.introText = this.game.add.text(
 			this.game.world.centerX, 
 			this.game.world.centerY, 
@@ -30,6 +31,8 @@ class IntroState extends Phaser.State{
 			{ font: 'Helvetica', fontSize: '20px', fill: '#fff' }
 		);
 
+		this.elemsGroup = this.game.add.group();
+
 		var anchorElements = [
 			this.introBg,
 			this.introText,
@@ -38,9 +41,13 @@ class IntroState extends Phaser.State{
 			this.playBtn
 		];
 
-		anchorElements.forEach(function(el){
-			el.anchor.setTo(0.5, 0.5);
+		anchorElements.forEach((el) => {
+			this.elemsGroup.add(el);
 		});
+
+		this.elemsGroup.setAll('anchor.x', 0.5);
+		this.elemsGroup.setAll('anchor.y', 0.5);
+
 	}
 
 	update(){
