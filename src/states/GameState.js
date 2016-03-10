@@ -21,30 +21,10 @@ class GameState extends Phaser.State {
 		
 		//Methods calls
 		this.playMusic();
-		this.animatePlatforms();
-		
-  
 	}
 
 	playMusic() {
 		this.music.play();
-	}
-
-	animatePlatforms() {
-        const that = this;
-
-        const goDown = () => {
-            const tween = that.game.add.tween(that.rockPlatforms).to({ y: that.rockPlatforms.position.y + 100 }, 3000, Phaser.Easing.Quadratic.InOut, true, 0);
-            tween.onComplete.add(goUp, that);
-        }
-
-        const goUp = () => {
-            const tween2 = that.game.add.tween(that.rockPlatforms).to({ y: that.rockPlatforms.position.y - 100 }, 3000, Phaser.Easing.Quadratic.InOut, true, 0);
-            tween2.onComplete.add(goDown, that); 
-        }
-
-        
-        goDown();
 	}
 
 	update() {
