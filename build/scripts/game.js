@@ -90,7 +90,7 @@ module.exports = exports['default'];
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-  value: true
+    value: true
 });
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -102,44 +102,69 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var RockPlatformGroup = (function (_Phaser$Group) {
-  _inherits(RockPlatformGroup, _Phaser$Group);
+    _inherits(RockPlatformGroup, _Phaser$Group);
 
-  function RockPlatformGroup(game, items) {
-    _classCallCheck(this, RockPlatformGroup);
+    function RockPlatformGroup(game, items) {
+        _classCallCheck(this, RockPlatformGroup);
 
-    _get(Object.getPrototypeOf(RockPlatformGroup.prototype), 'constructor', this).call(this, game);
-    this.items = items;
-    this.enableBody = true;
-    this.createPlatforms();
-  }
-
-  _createClass(RockPlatformGroup, [{
-    key: 'createPlatforms',
-    value: function createPlatforms() {
-
-      var startingCords = {
-        0: { top: 430, left: 80 },
-        1: { top: 380, left: 335 },
-        2: { top: 340, left: 520 },
-        3: { top: 380, left: 800 },
-        4: { top: 380, left: 1100 }
-      };
-
-      for (var i = 0; i < this.items; i++) {
-
-        var platform = this.create(startingCords[i].left, startingCords[i].top, 'rockPlatform');
-        platform.body.immovable = true;
-        platform.body.setSize(177, 64, 0, 20);
-
-        if (i === 0 || i === 1) {
-          platform.anchor.setTo(0.5, 0);
-          platform.scale.x = -1;
-        }
-      }
+        _get(Object.getPrototypeOf(RockPlatformGroup.prototype), 'constructor', this).call(this, game);
+        this.items = items;
+        this.enableBody = true;
+        this.rocks = [];
+        this.createPlatforms();
     }
-  }]);
 
-  return RockPlatformGroup;
+    _createClass(RockPlatformGroup, [{
+        key: 'createPlatforms',
+        value: function createPlatforms() {
+
+            var startingCords = {
+                0: { top: 430, left: 80 },
+                1: { top: 380, left: 335 },
+                2: { top: 430, left: 520 },
+                3: { top: 380, left: 800 },
+                4: { top: 430, left: 1100 }
+            };
+
+            for (var i = 0; i < this.items; i++) {
+
+                var platform = this.create(startingCords[i].left, startingCords[i].top, 'rockPlatform');
+                platform.body.immovable = true;
+                platform.body.setSize(177, 64, 0, 20);
+
+                if (i === 0 || i === 1) {
+                    platform.anchor.setTo(0.5, 0);
+                    platform.scale.x = -1;
+                }
+                this.rocks.push(platform);
+            }
+            this.animatePlatforms();
+        }
+    }, {
+        key: 'animatePlatforms',
+        value: function animatePlatforms() {
+            var _this = this;
+
+            var animTime = 1500;
+            var easing = Phaser.Easing.Quadratic.InOut;
+
+            var goDown = function goDown(item) {
+                var downTween = _this.game.add.tween(item).to({ y: item.position.y + 75 }, animTime, easing, true, 0);
+                downTween.onComplete.add(goUp, _this);
+            };
+
+            var goUp = function goUp(item) {
+                var upTween = _this.game.add.tween(item).to({ y: item.position.y - 75 }, animTime, easing, true, 0);
+                upTween.onComplete.add(goDown, _this);
+            };
+
+            this.rocks.forEach(function (item, i) {
+                i % 2 == 0 ? goUp(item) : goDown(item);
+            });
+        }
+    }]);
+
+    return RockPlatformGroup;
 })(Phaser.Group);
 
 exports['default'] = RockPlatformGroup;
@@ -239,29 +264,11 @@ var GameState = (function (_Phaser$State) {
 
             //Methods calls
             this.playMusic();
-            this.animatePlatforms();
         }
     }, {
         key: 'playMusic',
         value: function playMusic() {
             this.music.play();
-        }
-    }, {
-        key: 'animatePlatforms',
-        value: function animatePlatforms() {
-            var that = this;
-
-            var goDown = function goDown() {
-                var tween = that.game.add.tween(that.rockPlatforms).to({ y: that.rockPlatforms.position.y + 100 }, 3000, Phaser.Easing.Quadratic.InOut, true, 0);
-                tween.onComplete.add(goUp, that);
-            };
-
-            var goUp = function goUp() {
-                var tween2 = that.game.add.tween(that.rockPlatforms).to({ y: that.rockPlatforms.position.y - 100 }, 3000, Phaser.Easing.Quadratic.InOut, true, 0);
-                tween2.onComplete.add(goDown, that);
-            };
-
-            goDown();
         }
     }, {
         key: 'update',

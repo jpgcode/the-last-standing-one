@@ -4,6 +4,7 @@ class RockPlatformGroup extends Phaser.Group{
 		super(game);
 		this.items = items;
 		this.enableBody = true;
+        this.rocks = [];
 		this.createPlatforms();
 	}
 
@@ -12,9 +13,9 @@ class RockPlatformGroup extends Phaser.Group{
 		const startingCords = {
             0: { top: 430, left: 80 }, 
             1: { top: 380, left: 335 }, 
-            2: { top: 340, left: 520 },
+            2: { top: 430, left: 520 },
             3: { top: 380, left: 800 }, 
-            4: { top: 380, left: 1100 }
+            4: { top: 430, left: 1100 }
         }
 
         for (let i = 0; i < this.items; i++) {
@@ -27,9 +28,31 @@ class RockPlatformGroup extends Phaser.Group{
                 platform.anchor.setTo(0.5, 0);
                 platform.scale.x = -1;
             }
-
+            this.rocks.push(platform);
         }
+        this.animatePlatforms();
 	}
+
+    animatePlatforms() {
+
+        const animTime = 1500;
+        const easing   = Phaser.Easing.Quadratic.InOut;
+
+        const goDown = (item) => {
+            const downTween = this.game.add.tween(item).to({ y: item.position.y + 75 }, animTime, easing, true, 0);
+            downTween.onComplete.add(goUp, this);
+        }
+
+        const goUp = (item) => {
+            const upTween = this.game.add.tween(item).to({ y: item.position.y - 75 }, animTime, easing, true, 0);
+            upTween.onComplete.add(goDown, this); 
+        }
+
+        this.rocks.forEach((item, i) => {
+            (i % 2 == 0)? goUp(item): goDown(item);
+        });
+
+    }
 
 }
 
