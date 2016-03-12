@@ -22,7 +22,8 @@ class RockPlatformGroup extends Phaser.Group{
 
             const platform = this.create(startingCords[i].left, startingCords[i].top, 'rockPlatform');
             	  platform.body.immovable = true;
-                  platform.body.setSize(177, 64, 0, 20);
+                  platform.body.allowGravity = false;
+                  platform.body.setSize(187, 84, 0, 30);
 
             if(i === 0 || i === 1){
                 platform.anchor.setTo(0.5, 0);
@@ -38,18 +39,18 @@ class RockPlatformGroup extends Phaser.Group{
         const animTime = 1500;
         const easing   = Phaser.Easing.Quadratic.InOut;
 
-        const goDown = (item) => {
-            const downTween = this.game.add.tween(item).to({ y: item.position.y + 75 }, animTime, easing, true, 0);
-            downTween.onComplete.add(goUp, this);
-        }
-
-        const goUp = (item) => {
-            const upTween = this.game.add.tween(item).to({ y: item.position.y - 75 }, animTime, easing, true, 0);
-            upTween.onComplete.add(goDown, this); 
+        const animDirection = (tween, direction) => {
+            //tween.to(properties, duration, ease, autoStart, delay, repeat, yoyo)
+            tween.to({ y: direction }, animTime, easing, true, 0, -1, true);
         }
 
         this.rocks.forEach((item, i) => {
-            (i % 2 == 0)? goUp(item): goDown(item);
+
+            let direction = (i % 2 == 0)? item.position.y - 75 : item.position.y + 75;
+            const tween = this.game.add.tween(item.position);
+
+            animDirection(tween, direction);
+            
         });
 
     }

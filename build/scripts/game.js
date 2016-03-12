@@ -48,7 +48,7 @@ new Game();
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-  value: true
+       value: true
 });
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -58,29 +58,29 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Player = (function (_Phaser$Sprite) {
-  _inherits(Player, _Phaser$Sprite);
+       _inherits(Player, _Phaser$Sprite);
 
-  function Player(game) {
-    _classCallCheck(this, Player);
+       function Player(game) {
+              _classCallCheck(this, Player);
 
-    _get(Object.getPrototypeOf(Player.prototype), 'constructor', this).call(this, game, 50, 320, 'playerIdle');
-    this.enableBody = true;
-    game.physics.arcade.enable(this);
-    this.animations.add('idle', [0, 1, 2, 3, 4, 5], 10, true);
-    this.animations.add('playerRun', [6, 7, 8, 9, 10, 11], 10, true);
-    this.animations.add('playerJump', [20], 10, false);
-    this.animations.play('idle');
+              _get(Object.getPrototypeOf(Player.prototype), 'constructor', this).call(this, game, 50, 320, 'playerIdle');
+              this.enableBody = true;
+              game.physics.arcade.enable(this);
+              this.animations.add('idle', [0, 1, 2, 3, 4, 5], 10, true);
+              this.animations.add('playerRun', [6, 7, 8, 9, 10, 11], 10, true);
+              this.animations.add('playerJump', [20], 10, false);
+              this.animations.play('idle');
 
-    this.body.bounce.y = 0.2;
-    this.body.gravity.y = 400;
-    this.body.setSize(45, 102);
-    this.body.collideWorldBounds = true;
+              this.body.bounce.y = 0.2;
+              this.body.gravity.y = 400;
+              this.body.setSize(45, 102);
+              this.body.collideWorldBounds = true;
 
-    this.anchor.setTo(0.3, 0.3);
-    game.add.existing(this);
-  }
+              this.anchor.setTo(0.3, 0.3);
+              game.add.existing(this);
+       }
 
-  return Player;
+       return Player;
 })(Phaser.Sprite);
 
 exports['default'] = Player;
@@ -130,7 +130,8 @@ var RockPlatformGroup = (function (_Phaser$Group) {
 
                 var platform = this.create(startingCords[i].left, startingCords[i].top, 'rockPlatform');
                 platform.body.immovable = true;
-                platform.body.setSize(177, 64, 0, 20);
+                platform.body.allowGravity = false;
+                platform.body.setSize(187, 84, 0, 30);
 
                 if (i === 0 || i === 1) {
                     platform.anchor.setTo(0.5, 0);
@@ -148,18 +149,17 @@ var RockPlatformGroup = (function (_Phaser$Group) {
             var animTime = 1500;
             var easing = Phaser.Easing.Quadratic.InOut;
 
-            var goDown = function goDown(item) {
-                var downTween = _this.game.add.tween(item).to({ y: item.position.y + 75 }, animTime, easing, true, 0);
-                downTween.onComplete.add(goUp, _this);
-            };
-
-            var goUp = function goUp(item) {
-                var upTween = _this.game.add.tween(item).to({ y: item.position.y - 75 }, animTime, easing, true, 0);
-                upTween.onComplete.add(goDown, _this);
+            var animDirection = function animDirection(tween, direction) {
+                //tween.to(properties, duration, ease, autoStart, delay, repeat, yoyo)
+                tween.to({ y: direction }, animTime, easing, true, 0, -1, true);
             };
 
             this.rocks.forEach(function (item, i) {
-                i % 2 == 0 ? goUp(item) : goDown(item);
+
+                var direction = i % 2 == 0 ? item.position.y - 75 : item.position.y + 75;
+                var tween = _this.game.add.tween(item.position);
+
+                animDirection(tween, direction);
             });
         }
     }]);
@@ -271,11 +271,30 @@ var GameState = (function (_Phaser$State) {
             this.music.play();
         }
     }, {
+        key: 'collisionCallback',
+        value: function collisionCallback(s, platform) {
+            if (!s.locked) {
+                s.locked = true;
+                s.lockedTo = platform;
+                s.body.velocity.y = 0;
+            }
+        }
+    }, {
         key: 'update',
         value: function update() {
 
             this.lava.tilePosition.x += 0.6;
-            this.game.physics.arcade.collide(this.player, this.rockPlatforms);
+            this.game.physics.arcade.collide(this.player, this.rockPlatforms, this.collisionCallback, null, this);
+
+            if (this.player.locked) {
+                if (this.player.body.right < this.player.lockedTo.body.x || this.player.body.x > this.player.lockedTo.body.right) {
+                    this.player.locked = false;
+                    this.player.lockedTo = null;
+                } else {
+                    this.player.x += this.player.lockedTo.deltaX;
+                    this.player.y += this.player.lockedTo.deltaY;
+                }
+            }
 
             var grounded = this.player.body.touching.down;
             if (grounded && !this.cursors.left.isDown && !this.cursors.right.isDown) {

@@ -1,9 +1,9 @@
 class Player extends Phaser.Sprite{
 
 	constructor(game) {
-		super(game, 50, 320, 'playerIdle');
-		this.enableBody = true;
-		game.physics.arcade.enable(this);
+        super(game, 50, 320, 'playerIdle');
+        this.enableBody = true;
+        game.physics.arcade.enable(this);
         this.animations.add('idle', [0,1,2,3,4,5], 10, true);
         this.animations.add('playerRun', [6,7,8,9,10,11], 10, true);
         this.animations.add('playerJump', [20], 10, false);

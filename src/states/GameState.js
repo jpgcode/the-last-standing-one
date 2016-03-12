@@ -27,10 +27,28 @@ class GameState extends Phaser.State {
 		this.music.play();
 	}
 
+    collisionCallback(s, platform){
+        if (!s.locked) {
+            s.locked = true;
+            s.lockedTo = platform;
+            s.body.velocity.y = 0;
+        }
+    }
+
 	update() {
 
 		this.lava.tilePosition.x += 0.6;
-		this.game.physics.arcade.collide(this.player, this.rockPlatforms);
+		this.game.physics.arcade.collide(this.player, this.rockPlatforms, this.collisionCallback, null, this);
+
+        if (this.player.locked) {
+            if (this.player.body.right < this.player.lockedTo.body.x || this.player.body.x > this.player.lockedTo.body.right) {
+                this.player.locked = false;
+                this.player.lockedTo = null;
+            } else {
+                this.player.x += this.player.lockedTo.deltaX;
+                this.player.y += this.player.lockedTo.deltaY;
+            }
+        }
 
 		const grounded = this.player.body.touching.down;
         if(grounded && !this.cursors.left.isDown && !this.cursors.right.isDown){
