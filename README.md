@@ -1,4 +1,6 @@
-## The Last Standing One [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
+## The Last Standing One 
+
+
 
 An experiment with Phaser!
 
@@ -45,5 +47,18 @@ $ gulp                          # Start the static node.js server and runs it in
 This will start a light-weight development server with "live reload" and
 synchronized browsing across multiple devices and browsers.
 
----
-Made with ♥ by Jose Pablo Granados ([@jpgcode](https://twitter.com/jpgcode))# gulpAssemble
+## Contributing
+
+Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/jpgcode/respondTo/issues)
+
+## Authors
+
+**Jose Pablo Granados**
+ 
++ [github/jpgcode](https://github.com/jpgcode)
++ [twitter/jpgcode](http://twitter.com/jpgcode) 
+
+## License
+
+Copyright (c) 2016 Jose Pablo Granados
+Released under the MIT license
